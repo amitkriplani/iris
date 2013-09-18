@@ -15,6 +15,5 @@ set_include_path ( implode ( PATH_SEPARATOR, array (
 require_once 'Iris.php';
 
 // run iris application
-$iris = new Iris ();
-$iris->setup ( getenv ( 'mode' ) )->run ();
+Iris::getInstance()->setup ( getenv ( 'mode' ) )->run ();
 
