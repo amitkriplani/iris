@@ -1,4 +1,4 @@
 iris
 ====
 
-RESTfull messaging application
+RESTfull messaging application (incubator)
