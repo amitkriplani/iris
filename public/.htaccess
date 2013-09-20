@@ -1,0 +1,10 @@
+SetEnv mode dev
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^(.*)$ index.php?q=$1 [NC,L]
+
+php_flag display_errors 1
