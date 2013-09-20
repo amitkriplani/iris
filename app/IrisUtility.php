@@ -19,7 +19,7 @@ class IrisUtility {
 	}
 	protected function __construct() {
 	}
-	public function _autoload($class) {
+	public function autoload($class) {
 		foreach ( $this->_classFileExts as $ext ) {
 			
 			$file = str_replace ( '_', DIRECTORY_SEPARATOR, $class ) . $ext;

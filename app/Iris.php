@@ -84,7 +84,7 @@ class Iris {
 		require_once 'IrisUtility.php';
 		spl_autoload_register ( array (
 				IrisUtility::getInstance (),
-				'_autoload' 
+				'autoload' 
 		) );
 	}
 	protected static function bootstrap() {
