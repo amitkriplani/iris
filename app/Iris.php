@@ -42,6 +42,9 @@ class Iris {
 	protected static function setMode($_mode) {
 		Iris::$_mode = $_mode;
 	}
+	protected $_basePath;
+	protected $_controller;
+	protected $_route;
 	
 	/**
 	 * Constructor of the main class checks for all pre-requisites.
@@ -78,7 +81,8 @@ class Iris {
 	 * @return void
 	 */
 	public function run() {
-		die ( Iris::getMode () );
+		$this->initiateController ( $this->getRoute ()->getController () );
+		$this->dispatch ( $this->getController (), $this->getRoute ()->getAction () );
 	}
 	protected static function setupAutoloading() {
 		require_once 'IrisUtility.php';
@@ -93,5 +97,46 @@ class Iris {
 		
 		$bootstrap = new Bootstrap ();
 		$bootstrap->bootstrap ( Iris::getMode () );
+	}
+	public function getRoute($path = null) {
+		if (! $this->_route) {
+			$queryStr = trim ( str_replace ( $this->getBasePath (), '', $_SERVER ['REQUEST_URI'] ), '/' );
+			$parts = array_filter ( explode ( '/', $queryStr ) );
+			switch (count ( $parts )) {
+				case 0 : // using root url
+					$controller = 'index';
+					$action = 'index';
+					$params = array();
+					break;
+				case 1 : // using controller name
+					$controller = $parts[0];
+					$action = 'index';
+					$params = array();
+					break;
+				case 2 : // using controller+action name without params
+					$controller = $parts[0];
+					$action = $parts[1];
+					$params = array();
+					break;
+				default : // using controller+action name with params
+					$controller = $parts[0];
+					$action = $parts[1];
+					unset($parts[0]);
+					unset($parts[1]);
+					$params = array_values($parts);
+				break;
+			}
+			$this->_route = new Iris_Route($controller, $action, $params);
+		}
+		return $this->_route;
+	}
+	public function getBasePath() {
+		if (! $this->_basePath)
+			$this->_basePath = str_replace ( 'index.php', '', $_SERVER ['PHP_SELF'] );
+		return $this->_basePath;
+	}
+	protected function initiateController($name) {
+		$this->setController ( $name );
+		$this->initiateClass ( $this->getControllerPrefix () . $this->getController () );
 	}
 }
